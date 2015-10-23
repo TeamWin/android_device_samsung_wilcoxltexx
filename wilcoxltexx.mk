@@ -17,33 +17,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 # Also get non-open-source specific aspects if available
 $(call inherit-product-if-exists, vendor/samsung/wilcoxltexx/wilcoxltexx-vendor.mk)
 
-# call common msm8930
-$(call inherit-product, device/samsung/msm8930-common/msm8930.mk)
-
-# Common overlay
-DEVICE_PACKAGE_OVERLAYS += device/samsung/wilcoxltexx/overlay
-
-# Permissions
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
-#    frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
-#    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml
-
-# Boot animation
-TARGET_SCREEN_HEIGHT := 960
-TARGET_SCREEN_WIDTH := 540
-
-# Device uses high-density artwork where available
-PRODUCT_AAPT_CONFIG := normal
-PRODUCT_AAPT_PREF_CONFIG := hdpi
-
 # Genlock is needed for camera blob
 PRODUCT_PACKAGES += \
     libgenlock
-
-# Lights
-PRODUCT_PACKAGES += \
-    lights.msm8960
 
 # NFC packages
 #PRODUCT_PACKAGES += \
@@ -61,6 +37,23 @@ PRODUCT_PACKAGES += \
 #    $(LOCAL_PATH)/nfc/libnfc-nxp.conf:system/etc/libnfc-nxp.conf \
 #    $(LOCAL_PATH)/nfc/nfcee_access.xml:system/etc/nfcee_access.xml
 
+# Common overlay
+DEVICE_PACKAGE_OVERLAYS += device/samsung/wilcoxltexx/overlay
+
+# Device uses high-density artwork where available
+PRODUCT_AAPT_CONFIG := normal
+PRODUCT_AAPT_PREF_CONFIG := hdpi
+
+# Boot animation
+TARGET_SCREEN_HEIGHT := 960
+TARGET_SCREEN_WIDTH := 540
+
+# Permissions
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
+#    frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
+#    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml
+
 # Audio configuration
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_policy.conf:system/etc/audio_policy.conf \
@@ -72,6 +65,7 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video_le.xml:system/etc/media_codecs_google_video_le.xml \
     $(LOCAL_PATH)/media/media_codecs.xml:system/etc/media_codecs.xml \
+    $(LOCAL_PATH)/media/media_codecs_performance.xml:system/etc/media_codecs_performance.xml \
     $(LOCAL_PATH)/media/media_profiles.xml:system/etc/media_profiles.xml
 
 # Keylayouts
@@ -113,11 +107,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sap.conf:system/etc/sap.conf
 
 # FM radio
-PRODUCT_PACKAGES += \
+#PRODUCT_PACKAGES += \
     qcom.fmradio \
     libqcomfm_jni \
     FM2 \
     FMRecord
+
+# Lights
+PRODUCT_PACKAGES += \
+    lights.msm8960
 
 # IPv6 tethering
 PRODUCT_PACKAGES += \
@@ -133,72 +131,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
 
-# Set composition for USB
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    persist.sys.usb.config=mtp
+# call wilcox system props
+$(call inherit-product, device/samsung/wilcoxltexx/system_prop.mk)
 
-# Set read only default composition for USB
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.usb.default.config=mtp
-
-# QC Perf
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.extension_library=/system/lib/libqc-opt.so
-
-# Common build properties
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product_ship=true \
-    rild.libpath=/system/lib/libsec-ril.so \
-    rild.libargs=-d/dev/smd0 \
-    telephony.lteOnGsmDevice=1 \
-    ro.telephony.default_network=9 \
-    wifi.interface=wlan0 \
-    ro.chipname=MSM8930AB \
-    persist.radio.add_power_save=1 \
-    ro.sf.lcd_density=240 \
-    ro.ril.transmitpower=true \
-    ro.warmboot.capability=1 \
-    ro.qualcomm.cabl=0 \
-    ro.hwui.text_large_cache_height=2048 \
-    debug.composition.type=c2d \
-    ro.opengles.version=196608 \
-    mm.enable.qcom_parser=3310129 \
-    persist.audio.fluence.mode=endfire \
-    persist.audio.vr.enable=false \
-    persist.audio.handset.mic=digital \
-    audio.offload.disable=1 \
-    persist.rild.nitz_plmn="" \
-    persist.rild.nitz_long_ons_0="" \
-    persist.rild.nitz_long_ons_1="" \
-    persist.rild.nitz_long_ons_2="" \
-    persist.rild.nitz_long_ons_3="" \
-    persist.rild.nitz_short_ons_0="" \
-    persist.rild.nitz_short_ons_1="" \
-    persist.rild.nitz_short_ons_2="" \
-    persist.rild.nitz_short_ons_3="" \
-    ril.subscription.types=NV,RUIM \
-    persist.gps.qmienabled=true \
-    persist.gps.qc_nlp_in_use=1 \
-    ro.qc.sdk.izat.premium_enabled=0 \
-    ro.qc.sdk.izat.service_mask=0x0 \
-    ro.gps.agps_provider=1 \
-    ro.vold.umsdirtyratio=50 \
-    persist.debug.wfd.enable=1 \
-    persist.sys.wfd.virtual=0 \
-    persist.timed.enable=true \
-    persist.audio.lowlatency.rec=false \
-    audio.gapless.playback.disable=true \
-    qcom.hw.aac.encoder=true \
-    ro.config.max_starting_bg=8 \
-    mm.enable.smoothstreaming=true \
-    camera2.portability.force_api=1 \
-    ro.qualcomm.bt.hci_transport=smd \
-    persist.sys.isUsbOtgEnabled=true \
-    media.aac_51_output_enabled=true
-
-# RIL
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.telephony.ril_class=WilcoxRIL
+# call common msm8930
+$(call inherit-product, device/samsung/msm8930-common/msm8930.mk)
 
 # call dalvik heap config
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
