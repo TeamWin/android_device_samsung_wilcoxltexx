@@ -12,33 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
-
 # Also get non-open-source specific aspects if available
 $(call inherit-product-if-exists, vendor/samsung/wilcoxltexx/wilcoxltexx-vendor.mk)
 
-# Genlock is needed for camera blob
-PRODUCT_PACKAGES += \
-    libgenlock
-
-# NFC packages
-#PRODUCT_PACKAGES += \
-#    NfcNci \
-#    Tag \
-#    com.android.nfc_extras
-
-# NFC hal
-#PRODUCT_PACKAGES += \
-#    nfc_nci.pn54x.default
-
-# NFC configuration
-#PRODUCT_COPY_FILES += \
-#    $(LOCAL_PATH)/nfc/libnfc-brcm.conf:system/etc/libnfc-brcm.conf \
-#    $(LOCAL_PATH)/nfc/libnfc-nxp.conf:system/etc/libnfc-nxp.conf \
-#    $(LOCAL_PATH)/nfc/nfcee_access.xml:system/etc/nfcee_access.xml
-
 # Common overlay
 DEVICE_PACKAGE_OVERLAYS += device/samsung/wilcoxltexx/overlay
+
+# Permissions
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
+    #frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
+    #frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
+    #frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml
 
 # Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal
@@ -48,11 +33,29 @@ PRODUCT_AAPT_PREF_CONFIG := hdpi
 TARGET_SCREEN_HEIGHT := 960
 TARGET_SCREEN_WIDTH := 540
 
+# Genlock is needed for camera blob
+PRODUCT_PACKAGES += \
+    libgenlock
+
+# NFC packages
+#PRODUCT_PACKAGES += \
+    #nfc_nci.pn54x.default \
+    #NfcNci \
+    #Tag \
+    #com.android.nfc_extras
+
+# NFCEE access control
+#PRODUCT_COPY_FILES += \
+   #$(LOCAL_PATH)/nfc/nfcee_access.xml:system/etc/nfcee_access.xml
+
+# NFC configuration
+#PRODUCT_COPY_FILES += \
+    #$(LOCAL_PATH)/nfc/libnfc-nxp.conf:system/etc/libnfc-nxp.conf \
+    #$(LOCAL_PATH)/nfc/libnfc-brcm.conf:system/etc/libnfc-brcm.conf
+
 # Permissions
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
-#    frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml \
-#    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml
+    frameworks/native/data/etc/android.software.midi.xml:system/etc/permissions/android.software.midi.xml
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
@@ -96,6 +99,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/system/etc/init.qcom.audio.sh:system/etc/init.qcom.audio.sh \
     $(LOCAL_PATH)/rootdir/system/etc/init.qcom.bt.sh:system/etc/init.qcom.bt.sh \
     $(LOCAL_PATH)/rootdir/system/etc/init.qcom.fm.sh:system/etc/init.qcom.fm.sh
+
+# Eleven
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilt/Eleven.apk:system/app/Eleven/Eleven.apk
 
 # GPS HAL
 PRODUCT_PACKAGES += \
